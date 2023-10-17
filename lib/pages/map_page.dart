@@ -15,15 +15,15 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
+  //Marcadores definidos por el usuario
+  Set<Marker> _markers = {};
+
+  //Lista de marcadores
+  List<LatLng> _markerLocations = [];
+
   Location _locationController = new Location();
 
   late BitmapDescriptor myIcon;
-
-  static const LatLng _pGooglePark =
-      LatLng(37.42796133580664, -122.085749655962);
-
-  static const LatLng _pApplePark =
-      LatLng(37.43786133580664, -122.086749655962);
 
   LatLng? _currentP = null;
 
@@ -54,19 +54,22 @@ class _MapPageState extends State<MapPage> {
               onMapCreated: (GoogleMapController controller) {
                 _mapController.complete(controller);
               },
+              onTap: (LatLng location) {
+                setState(() {
+                  _markers.add(
+                    Marker(
+                      markerId: MarkerId(location.toString()),
+                      position: location,
+                    ),
+                  );
+                });
+              },
               markers: {
                 Marker(
                     markerId: MarkerId("_currentLocation"),
                     icon: myIcon,
                     position: _currentP!),
-                Marker(
-                    markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pGooglePark),
-                Marker(
-                    markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pApplePark),
+                ..._markers
               },
             ),
     );
