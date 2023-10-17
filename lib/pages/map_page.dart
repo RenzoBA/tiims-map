@@ -16,12 +16,12 @@ class _MapPageState extends State<MapPage> {
       Completer<GoogleMapController>();
 
   //Marcadores definidos por el usuario
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   //Lista de marcadores
-  List<LatLng> _markerLocations = [];
+  final List<LatLng> _markerLocations = [];
 
-  Location _locationController = new Location();
+  final Location _locationController = new Location();
 
   late BitmapDescriptor myIcon;
 
@@ -31,7 +31,8 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(48, 48)), 'assets/images/user.png')
+            const ImageConfiguration(size: Size(48, 48)),
+            'assets/images/user.png')
         .then((onValue) {
       myIcon = onValue;
     });
@@ -41,6 +42,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("🌎 Coolest map")),
       body: Stack(
         children: [
           _currentP == null
@@ -83,7 +85,7 @@ class _MapPageState extends State<MapPage> {
               return ListTile(
                 title: Text(
                   'Marker ${index + 1}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       backgroundColor: Colors.blueAccent,
                       color: Colors.white,
                       fontSize: 12,
