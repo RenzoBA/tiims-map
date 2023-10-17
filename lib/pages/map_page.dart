@@ -41,37 +41,61 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _currentP == null
-          ? const Center(
-              child: Text("Loading :)"),
-            )
-          : GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: _currentP!,
-                zoom: 13,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _mapController.complete(controller);
-              },
-              onTap: (LatLng location) {
-                setState(() {
-                  _markers.add(
+      body: Stack(
+        children: [
+          _currentP == null
+              ? const Center(
+                  child: Text("Loading :)"),
+                )
+              : GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                    target: _currentP!,
+                    zoom: 13,
+                  ),
+                  onMapCreated: (GoogleMapController controller) {
+                    _mapController.complete(controller);
+                  },
+                  onTap: (LatLng location) {
+                    setState(() {
+                      _markers.add(
+                        Marker(
+                          markerId: MarkerId(location.toString()),
+                          position: location,
+                        ),
+                      );
+                      _markerLocations.add(location);
+                    });
+                  },
+                  markers: {
                     Marker(
-                      markerId: MarkerId(location.toString()),
-                      position: location,
-                    ),
-                  );
-                });
-              },
-              markers: {
-                Marker(
-                    markerId: MarkerId("_currentLocation"),
-                    icon: myIcon,
-                    position: _currentP!),
-                ..._markers
-              },
-            ),
+                        markerId: MarkerId("_currentLocation"),
+                        icon: myIcon,
+                        position: _currentP!),
+                    ..._markers
+                  },
+                ),
+          Expanded(
+              child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: _markerLocations.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(
+                  'Marker ${index + 1}',
+                  style: TextStyle(
+                      backgroundColor: Colors.blueAccent,
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                    'Lat: ${_markerLocations[index].latitude}, Lng: ${_markerLocations[index].longitude}'),
+              );
+            },
+          ))
+        ],
+      ),
     );
   }
 
